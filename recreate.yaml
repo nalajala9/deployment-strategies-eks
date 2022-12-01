@@ -1,0 +1,50 @@
+
+#In recreate deployment, 
+#all of the old pods are killed all at once and get replaced all at once with the new ones. 
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recreate
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: web     
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+        - name: web
+          image: 20152282/nginx:v1
+          ports:
+          - containerPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata: 
+  name: service-recreate
+spec:
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+  selector: 
+    app: web     
+  type: LoadBalancer
+
+
+# kubectl apply -f recreate.yaml
+
+#kubectl set image deployment/recreate web=20152282/nginx:v2
+
+#kubectl delete -f recreate.yaml
+
+
+

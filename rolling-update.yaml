@@ -1,0 +1,66 @@
+
+#The rolling deployment is the default deployment strategy in Kubernetes.
+# It replaces pods, one by one, of the previous version of our application with pods of the new version without any cluster downtime.
+#When using the RollingUpdate strategy, there are two more options that let us fine-tune the update process:
+#maxSurge: The number of pods that can be created above the desired amount of pods during an update. 
+         #This can be an absolute number or percentage of the replicas count. The default is 25%.
+#maxUnavailable: The number of pods that can be unavailable during the update process. 
+          #This can be an absolute number or a percentage of the replicas count; the default is 25%.
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rolling
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  selector:
+    matchLabels:
+      app: web      
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+        - name: web
+          image: 20152282/nginx:v1
+          ports:
+          - containerPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata: 
+  name: service-rolling
+spec:
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+  selector: 
+    app: web     
+  type: LoadBalancer
+
+
+# u don't need to mention deployment type.By default k8s take rolling update strategy
+
+# kubectl apply -f rolling-update.yaml
+
+# *update image to v2(replace 20152282/nginx:v1 with 20152282/nginx:v2 in the above code)
+
+#Repeat again , kubectl apply -f rolling-update.yaml
+
+# use the below command to see the versions deployed:
+
+    #kubectl rollout history deployment/rolling
+
+# Rollback can be done using undo :
+
+    # kubectl rollout undo deployment/rolling --to-revision=1

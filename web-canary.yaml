@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myweb-canary
+  labels:
+    version: v2
+spec:
+  selector:
+    matchLabels:
+      new: web-canary
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        new: web-canary
+        version: v2
+    spec:
+      containers:
+        - name: web
+          image: 20152282/nginx:v2
+          ports:
+          - containerPort: 80
+
+# kubectl apply -f web-canary.yaml
+#kubectl label pods -l app=web-canary app=web , the the service of web.yaml check the pods that are having 
+# labels with app: web-canary and then we label those pods with service selectory label app=webapp, so that 
+#the updated version with one replica join with eariler version.(max traffic at v1 and min at v2)
+
+
+#kubectl get pods --show-labels
+#kubectl label pod/myweb-canary-6dd8bc4896-q7np5 app=web
+

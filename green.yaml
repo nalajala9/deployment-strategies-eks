@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-green
+  labels:
+    version: v2
+spec:
+  selector:
+    matchLabels:
+      app: web-green
+      version: v2
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: web-green
+        version: v2
+    spec:
+      containers:
+        - name: web
+          image: 20152282/nginx:v2
+          ports:
+          - containerPort: 80
+
+#Now we want to redirect all the traffic from blue to green
+# we will update the service file
+#we will change the labels under selctor of service-blue with app:webgreen and version:2
+#once we updated, kubectl apply -f svc/service-blue
+#or 
+#kubectl patch service service-blue -p '{"spec":{"selector":{"app":"web-green","version":"v2"}}}'
+#once we are ok with v2, we scale down v1 kubectl scale --replicas=0 deployment/web-blue
+
+

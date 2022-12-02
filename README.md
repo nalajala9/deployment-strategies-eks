@@ -18,9 +18,11 @@ To deploy the AWS Load Balancer Controller to an Amazon EKS cluster:
 
   * Download an IAM policy for the AWS Load Balancer Controller that allows it to make calls to AWS APIs on your behalf.
 
+
     curl -o iam_policy.json https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.4.4/docs/install/iam_policy.json
     
  * Create an IAM policy using the policy downloaded in the previous step.
+
 
     aws iam create-policy \
     --policy-name AWSLoadBalancerControllerIAMPolicy \

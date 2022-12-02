@@ -1,4 +1,4 @@
-
+#used this yaml for ingress controller with https
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -35,7 +35,7 @@ spec:
       targetPort: 80
   selector: 
     app: web 
-  type: LoadBalancer
+  type: NodePort
 
 
 
